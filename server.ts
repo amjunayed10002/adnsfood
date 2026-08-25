@@ -1,12 +1,10 @@
 import express, { type Request, type Response } from 'express';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import fs from 'fs';
 import { MongoClient, Db } from 'mongodb';
 import crypto from 'crypto';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const ROOT_DIR = process.cwd();
 
 const app = express();
 const PORT = 3000;
@@ -15,7 +13,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Data Directory for persistent local document store fallback
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = path.join(ROOT_DIR, 'data');
 const DATA_FILE = path.join(DATA_DIR, 'adns_food_db.json');
 
 if (!fs.existsSync(DATA_DIR)) {
@@ -1184,7 +1182,7 @@ async function startServer() {
   await initMongo();
 
   if (process.env.NODE_ENV === 'production') {
-    const distPath = path.join(__dirname, 'dist');
+    const distPath = path.join(ROOT_DIR, 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));

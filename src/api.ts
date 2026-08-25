@@ -15,11 +15,25 @@ function getHeaders(customHeaders: Record<string, string> = {}): Record<string, 
 }
 
 async function handleResponse<T>(res: globalThis.Response): Promise<T> {
+  const contentType = res.headers.get('content-type') || '';
   let data: any;
-  try {
-    data = await res.json();
-  } catch (err) {
-    throw new Error('Server response could not be parsed.');
+
+  if (contentType.includes('application/json')) {
+    try {
+      data = await res.json();
+    } catch {
+      throw new Error(`Invalid JSON received from server (HTTP ${res.status}).`);
+    }
+  } else {
+    const text = await res.text();
+    if (!res.ok) {
+      throw new Error(`Server returned HTTP ${res.status}: ${text.slice(0, 100) || res.statusText}`);
+    }
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return text as unknown as T;
+    }
   }
 
   if (!res.ok) {
