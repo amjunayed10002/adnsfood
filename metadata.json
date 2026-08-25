@@ -1,0 +1,6 @@
+{
+  "name": "ADN's Food - Online Restaurant & Ordering System",
+  "description": "Professional online food ordering and restaurant management platform for ADN's Food with bKash and COD payment, live order tracking, menu management, and admin dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
